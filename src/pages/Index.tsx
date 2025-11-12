@@ -37,6 +37,7 @@ const Index = () => {
               <NodeCard
                 key={node.name}
                 node={node}
+                logs={logs}
                 onStart={() => startNode(node.name)}
                 onStop={() => stopNode(node.name)}
                 onRestart={() => restartNode(node.name)}

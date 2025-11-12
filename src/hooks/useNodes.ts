@@ -66,17 +66,42 @@ export function useNodes() {
     );
     addLog(nodeName, "Starting node...");
     
-    // Simulate log output
+    // Simulate log output with realistic ROS 2 messages
     setTimeout(() => {
       addLog(nodeName, "[INFO] Node initialized successfully");
     }, 500);
     
     setTimeout(() => {
-      addLog(nodeName, "[INFO] Publishing messages...");
+      addLog(nodeName, "[INFO] Creating publishers and subscribers");
+    }, 800);
+    
+    setTimeout(() => {
+      addLog(nodeName, "[INFO] Node is now active");
     }, 1000);
+
+    // Simulate periodic messages for running nodes
+    const interval = setInterval(() => {
+      if (nodeName === "/talker") {
+        addLog(nodeName, `[INFO] Publishing: "Hello World ${Date.now() % 1000}"`);
+      } else if (nodeName === "/listener") {
+        addLog(nodeName, `[INFO] Received message: "Hello World ${Date.now() % 1000}"`);
+      } else {
+        addLog(nodeName, `[DEBUG] Heartbeat ${Date.now() % 100}`);
+      }
+    }, 2000);
+
+    // Store interval ID for cleanup (in production, store in state)
+    (window as any)[`interval_${nodeName}`] = interval;
   };
 
   const stopNode = (nodeName: string) => {
+    // Clear periodic messages
+    const interval = (window as any)[`interval_${nodeName}`];
+    if (interval) {
+      clearInterval(interval);
+      delete (window as any)[`interval_${nodeName}`];
+    }
+
     setNodes((prev) =>
       prev.map((node) =>
         node.name === nodeName
@@ -84,17 +109,21 @@ export function useNodes() {
           : node
       )
     );
-    addLog(nodeName, "Stopping node...");
+    addLog(nodeName, "[WARN] Shutdown requested");
+    
+    setTimeout(() => {
+      addLog(nodeName, "[INFO] Cleaning up resources");
+    }, 200);
     
     setTimeout(() => {
       addLog(nodeName, "[INFO] Node shutdown complete");
-    }, 300);
+    }, 400);
   };
 
   const restartNode = (nodeName: string) => {
-    addLog(nodeName, "Restarting node...");
+    addLog(nodeName, "[INFO] Restarting node...");
     stopNode(nodeName);
-    setTimeout(() => startNode(nodeName), 500);
+    setTimeout(() => startNode(nodeName), 600);
   };
 
   return {
