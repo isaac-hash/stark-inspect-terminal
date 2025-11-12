@@ -1,0 +1,65 @@
+import { useConnectionStore } from '@/stores/useConnectionStore';
+import { useGraphStore } from '@/stores/useGraphStore';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { RefreshCw } from 'lucide-react';
+import { api } from '@/services/api';
+import { toast } from '@/hooks/use-toast';
+
+export function Topbar() {
+  const isConnected = useConnectionStore((state) => state.isConnected);
+  const nodes = useGraphStore((state) => state.nodes);
+  const topics = useGraphStore((state) => state.topics);
+
+  const handleRefresh = async () => {
+    try {
+      const data = await api.getGraph();
+      useGraphStore.getState().setGraphData(data);
+      toast({ title: 'Refreshed', description: 'Graph data updated' });
+    } catch (error) {
+      toast({ 
+        title: 'Error', 
+        description: 'Failed to refresh data',
+        variant: 'destructive' 
+      });
+    }
+  };
+
+  return (
+    <header className="h-16 bg-card border-b border-border px-6 flex items-center justify-between">
+      <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2">
+          <div
+            className={`h-2 w-2 rounded-full ${
+              isConnected ? 'bg-success animate-pulse' : 'bg-error'
+            }`}
+          />
+          <span className="text-sm font-mono text-muted-foreground">
+            {isConnected ? 'Connected' : 'Disconnected'}
+          </span>
+        </div>
+
+        <div className="h-6 w-px bg-border" />
+
+        <div className="flex items-center gap-3">
+          <Badge variant="outline" className="font-mono">
+            {nodes.length} Nodes
+          </Badge>
+          <Badge variant="outline" className="font-mono">
+            {topics.length} Topics
+          </Badge>
+        </div>
+      </div>
+
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={handleRefresh}
+        disabled={!isConnected}
+      >
+        <RefreshCw className="h-4 w-4 mr-2" />
+        Refresh
+      </Button>
+    </header>
+  );
+}
