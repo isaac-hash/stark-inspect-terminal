@@ -18,15 +18,15 @@ export default function Nodes() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 md:space-y-6">
       <div>
-        <h2 className="text-2xl font-bold text-foreground mb-2">Nodes</h2>
-        <p className="text-muted-foreground">
+        <h2 className="text-xl md:text-2xl font-bold text-foreground mb-2">Nodes</h2>
+        <p className="text-sm md:text-base text-muted-foreground">
           All ROS 2 nodes detected in your system
         </p>
       </div>
 
-      <Card>
+      <Card className="overflow-auto">
         {nodes.length === 0 ? (
           <div className="p-8 text-center text-muted-foreground">
             No nodes detected. Make sure ROS 2 nodes are running.

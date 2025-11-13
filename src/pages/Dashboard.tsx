@@ -20,15 +20,15 @@ export default function Dashboard() {
   }, {} as Record<string, number>);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 md:space-y-6">
       <div>
-        <h2 className="text-2xl font-bold text-foreground mb-2">Dashboard</h2>
-        <p className="text-muted-foreground">
+        <h2 className="text-xl md:text-2xl font-bold text-foreground mb-2">Dashboard</h2>
+        <p className="text-sm md:text-base text-muted-foreground">
           Real-time overview of your ROS 2 system
         </p>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">Total Nodes</CardTitle>

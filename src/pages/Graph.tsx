@@ -57,21 +57,21 @@ export default function Graph() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 md:space-y-6">
       <div>
-        <h2 className="text-2xl font-bold text-foreground mb-2">Graph</h2>
-        <p className="text-muted-foreground">
+        <h2 className="text-xl md:text-2xl font-bold text-foreground mb-2">Graph</h2>
+        <p className="text-sm md:text-base text-muted-foreground">
           Visual representation of nodes and topic connections
         </p>
       </div>
 
       <Card className="p-0 overflow-hidden">
         {graphData.nodes.length === 0 ? (
-          <div className="h-[600px] flex items-center justify-center text-muted-foreground">
+          <div className="h-[400px] md:h-[600px] flex items-center justify-center text-muted-foreground">
             No graph data available. Start some ROS 2 nodes.
           </div>
         ) : (
-          <div className="h-[600px] bg-background">
+          <div className="h-[400px] md:h-[600px] bg-background">
             <ForceGraph2D
               ref={graphRef}
               graphData={graphData}

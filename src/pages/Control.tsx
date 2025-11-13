@@ -77,10 +77,10 @@ export default function Control() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 md:space-y-6">
       <div>
-        <h2 className="text-2xl font-bold text-foreground mb-2">Control</h2>
-        <p className="text-muted-foreground">
+        <h2 className="text-xl md:text-2xl font-bold text-foreground mb-2">Control</h2>
+        <p className="text-sm md:text-base text-muted-foreground">
           Manage launch targets and robot processes
         </p>
       </div>

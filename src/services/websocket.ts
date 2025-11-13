@@ -4,13 +4,26 @@ import { useControlStore } from '@/stores/useControlStore';
 import { WebSocketEvent } from '@/types';
 import { toast } from '@/hooks/use-toast';
 
+// Set to true to use dummy data, false to connect to real backend
+const USE_DUMMY_DATA = true;
+
 let ws: WebSocket | null = null;
 let reconnectTimer: NodeJS.Timeout | null = null;
+let dummyInterval: NodeJS.Timeout | null = null;
 
 export const websocketService = {
   connect() {
     const { wsUrl, setConnected } = useConnectionStore.getState();
     
+    // Use dummy data mode
+    if (USE_DUMMY_DATA) {
+      console.log('Using dummy data mode');
+      setConnected(true);
+      toast({ title: 'Connected', description: 'Using dummy data (set USE_DUMMY_DATA=false for live backend)' });
+      this.startDummyDataSimulation();
+      return;
+    }
+
     if (ws?.readyState === WebSocket.OPEN) {
       console.log('WebSocket already connected');
       return;
@@ -76,6 +89,31 @@ export const websocketService = {
     }
   },
 
+  startDummyDataSimulation() {
+    // Simulate periodic updates to dummy data
+    dummyInterval = setInterval(() => {
+      const graphStore = useGraphStore.getState();
+      
+      // Randomly update node uptimes and slight rate variations
+      const updatedNodes = graphStore.nodes.map(node => ({
+        ...node,
+        uptime: node.uptime ? node.uptime + 5 : 5,
+      }));
+
+      const updatedTopics = graphStore.topics.map(topic => ({
+        ...topic,
+        rate_hz: topic.rate_hz * (0.98 + Math.random() * 0.04),
+        bandwidth_mbps: topic.bandwidth_mbps * (0.98 + Math.random() * 0.04),
+      }));
+
+      graphStore.setGraphData({
+        nodes: updatedNodes,
+        topics: updatedTopics,
+        timestamp: Date.now(),
+      });
+    }, 5000);
+  },
+
   disconnect() {
     if (ws) {
       ws.close();
@@ -84,6 +122,10 @@ export const websocketService = {
     if (reconnectTimer) {
       clearTimeout(reconnectTimer);
       reconnectTimer = null;
+    }
+    if (dummyInterval) {
+      clearInterval(dummyInterval);
+      dummyInterval = null;
     }
     useConnectionStore.getState().setConnected(false);
   },

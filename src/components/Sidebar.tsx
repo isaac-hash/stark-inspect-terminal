@@ -1,5 +1,7 @@
 import { NavLink } from '@/components/NavLink';
-import { Activity, Box, Radio, Server, Settings, Network, PlayCircle } from 'lucide-react';
+import { Activity, Box, Radio, Server, Settings, Network, PlayCircle, Menu } from 'lucide-react';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Button } from '@/components/ui/button';
 
 const navItems = [
   { to: '/', label: 'Dashboard', icon: Activity, end: true },
@@ -12,8 +14,8 @@ const navItems = [
 ];
 
 export function Sidebar() {
-  return (
-    <aside className="w-64 bg-card border-r border-border flex flex-col">
+  const SidebarContent = () => (
+    <>
       <div className="p-6 border-b border-border">
         <div className="flex items-center gap-2">
           <Activity className="h-6 w-6 text-primary" />
@@ -46,6 +48,27 @@ export function Sidebar() {
           ROS 2 Humble/Jazzy
         </p>
       </div>
-    </aside>
+    </>
+  );
+
+  return (
+    <>
+      {/* Desktop Sidebar */}
+      <aside className="hidden md:flex w-64 bg-card border-r border-border flex-col">
+        <SidebarContent />
+      </aside>
+
+      {/* Mobile Sidebar */}
+      <Sheet>
+        <SheetTrigger asChild className="md:hidden fixed top-4 left-4 z-50">
+          <Button variant="outline" size="icon">
+            <Menu className="h-5 w-5" />
+          </Button>
+        </SheetTrigger>
+        <SheetContent side="left" className="w-64 p-0">
+          <SidebarContent />
+        </SheetContent>
+      </Sheet>
+    </>
   );
 }
