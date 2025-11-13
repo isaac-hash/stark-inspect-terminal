@@ -5,7 +5,7 @@ import { WebSocketEvent } from '@/types';
 import { toast } from '@/hooks/use-toast';
 
 // Set to true to use dummy data, false to connect to real backend
-const USE_DUMMY_DATA = true;
+export const USE_DUMMY_DATA = true;
 
 let ws: WebSocket | null = null;
 let reconnectTimer: NodeJS.Timeout | null = null;
